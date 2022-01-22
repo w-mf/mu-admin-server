@@ -1,5 +1,6 @@
-import * as dotenv from 'dotenv';
-import { resolve } from 'path';
+/* eslint-disable @typescript-eslint/no-var-requires */
+const dotenv = require('dotenv');
+const { resolve } = require('path');
 
 const res = dotenv.config({
   path:
@@ -19,7 +20,7 @@ module.exports = {
   password: env.DATABASE_PASS,
   database: env.DATABASE_NAME,
   entities: ['dist/**/*.entity{.ts,.js}'],
-  migrations: ['migration/*{.js,.ts}'],
+  migrations: ['dist/migration/*{.ts,.js}'],
   logging: true,
   synchronize: false,
   cli: {
