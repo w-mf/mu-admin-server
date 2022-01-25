@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { MENU_TYPE } from '../constant';
+import { Base } from '~/common/entity/base.entity';
 @Entity()
-export class Menu {
+export class Menu extends Base {
   @PrimaryGeneratedColumn('increment', {
     name: 'id',
     type: 'int',
@@ -14,7 +14,7 @@ export class Menu {
     width: 1,
     comment: '类型。1:目录,2:菜单,3:按钮',
   })
-  type: MENU_TYPE;
+  type: 1 | 2 | 3;
 
   @Column({
     name: 'name',

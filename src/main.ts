@@ -56,14 +56,7 @@ async function bootstrap() {
       whitelist: true, // 去掉没有使用任何验证装饰器的属性的验证
     }),
   );
-
-  app.use(cookieParser('cookiesecret2022'));
   app.use(helmet());
-  app.use(
-    csurf({
-      cookie: true,
-    }),
-  );
 
   await app.listen(3000);
 }

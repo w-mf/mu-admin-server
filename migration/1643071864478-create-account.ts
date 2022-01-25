@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class createMenu1642820345984 implements MigrationInterface {
+export class createAccount1643071864478 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.createTable(
+    await queryRunner.createTable(
       new Table({
-        name: 'menu',
+        name: 'account',
         columns: [
           {
             name: 'id',
@@ -16,51 +16,67 @@ export class createMenu1642820345984 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: 'type',
-            type: 'tinyint',
-            width: 1,
-            comment: '类型。1:目录,2:菜单,3:按钮',
+            type: 'json',
+            name: 'roleIds',
+            isNullable: true,
+            comment: '所属角色id',
+          },
+          {
+            name: 'userName',
+            type: 'varchar',
+            length: '128',
+            isUnique: true,
+            comment: '用户名',
           },
           {
             name: 'name',
             type: 'varchar',
             length: '128',
-            comment: '名称',
-          },
-          {
-            name: 'parentId',
-            type: 'int',
             isNullable: true,
-            comment: '父级节点',
+            comment: '姓名',
           },
           {
-            name: 'route',
-            type: 'varchar',
-            length: '256',
-            isNullable: true,
-            comment: '前端路由',
-          },
-          {
-            name: 'icon',
+            name: 'nickname',
             type: 'varchar',
             length: '128',
             isNullable: true,
-            comment: '图标',
+            comment: '昵称',
           },
           {
-            name: 'show',
+            name: 'email',
+            type: 'varchar',
+            length: '256',
+            isNullable: true,
+            comment: '邮箱',
+          },
+          {
+            name: 'mobile',
+            type: 'varchar',
+            length: '48',
+            isNullable: true,
+            comment: '手机号',
+          },
+          {
+            name: 'remark',
+            type: 'varchar',
+            length: '256',
+            isNullable: true,
+            comment: '备注',
+          },
+          {
+            name: 'status',
             type: 'tinyint',
             width: 1,
             default: 1,
-            comment: '是否显示。1:显示,0:不显示，默认1',
+            unsigned: true,
+            comment: '状态。1:正常，0: 停用',
           },
           {
-            name: 'sort',
-            type: 'tinyint',
-            width: 4,
-            unsigned: true,
+            name: 'password',
+            type: 'varchar',
+            length: '256',
             isNullable: true,
-            comment: '排序。最大值 9999',
+            comment: '密码',
           },
           {
             name: 'createdAt',
@@ -78,6 +94,6 @@ export class createMenu1642820345984 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('menu');
+    queryRunner.dropTable('account');
   }
 }

@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class createMenu1642820345984 implements MigrationInterface {
+export class createRole1643071467220 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.createTable(
       new Table({
-        name: 'menu',
+        name: 'role',
         columns: [
           {
             name: 'id',
@@ -16,51 +16,32 @@ export class createMenu1642820345984 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: 'type',
-            type: 'tinyint',
-            width: 1,
-            comment: '类型。1:目录,2:菜单,3:按钮',
-          },
-          {
             name: 'name',
             type: 'varchar',
             length: '128',
             comment: '名称',
+            isUnique: true,
           },
           {
-            name: 'parentId',
-            type: 'int',
+            name: 'menuIds',
+            type: 'json',
+            comment: '菜单权限',
             isNullable: true,
-            comment: '父级节点',
           },
           {
-            name: 'route',
+            name: 'remark',
             type: 'varchar',
             length: '256',
             isNullable: true,
-            comment: '前端路由',
+            comment: '备注',
           },
           {
-            name: 'icon',
-            type: 'varchar',
-            length: '128',
-            isNullable: true,
-            comment: '图标',
-          },
-          {
-            name: 'show',
+            name: 'status',
             type: 'tinyint',
             width: 1,
             default: 1,
-            comment: '是否显示。1:显示,0:不显示，默认1',
-          },
-          {
-            name: 'sort',
-            type: 'tinyint',
-            width: 4,
             unsigned: true,
-            isNullable: true,
-            comment: '排序。最大值 9999',
+            comment: '状态。1:正常，0: 停用',
           },
           {
             name: 'createdAt',
@@ -78,6 +59,6 @@ export class createMenu1642820345984 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('menu');
+    queryRunner.dropTable('role');
   }
 }

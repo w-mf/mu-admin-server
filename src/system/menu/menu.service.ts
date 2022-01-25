@@ -28,9 +28,9 @@ export class MenuService {
     const { pageNo, pageSize } = findMenuDto;
     const [menus, total] = await this.menuRepository.findAndCount({
       order: {
-        id: 'DESC',
+        id: 'ASC',
       },
-      skip: pageNo,
+      skip: (pageNo - 1) * pageSize,
       take: pageSize,
     });
     return {

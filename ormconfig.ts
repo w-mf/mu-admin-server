@@ -19,6 +19,10 @@ module.exports = {
   username: env.DATABASE_USER,
   password: env.DATABASE_PASS,
   database: env.DATABASE_NAME,
+  timezone: '+08:00',
+  cache: {
+    duration: 60000, // 1分钟的缓存
+  },
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/migration/*{.ts,.js}'],
   logging: true,
