@@ -50,6 +50,12 @@ export class AccountService {
     delete res.password;
     return res;
   }
+  async findAccount(userName: string) {
+    const res = await this.accountRepository.findOne({
+      where: { userName },
+    });
+    return res;
+  }
 
   async update(id: number, updateAccountDto: UpdateAccountDto) {
     await this.findOne(id);
