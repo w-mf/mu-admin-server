@@ -4,7 +4,7 @@ import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { FindAccountDto } from './dto/find-account.dto';
-
+import { SetPasswordAccountDto } from './dto/setpassword-account.dto';
 @Controller('system/account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
@@ -32,5 +32,9 @@ export class AccountController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.accountService.remove(+id);
+  }
+  @Post('set-password')
+  setPassword(@Body() setPasswordAccountDto: SetPasswordAccountDto) {
+    return this.accountService.setPassword(setPasswordAccountDto);
   }
 }

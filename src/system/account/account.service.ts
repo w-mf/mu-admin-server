@@ -5,6 +5,7 @@ import { Account } from './entities/account.entity';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { FindAccountDto } from './dto/find-account.dto';
+import { SetPasswordAccountDto } from './dto/setpassword-account.dto';
 @Injectable()
 export class AccountService {
   constructor(
@@ -46,6 +47,7 @@ export class AccountService {
     if (!res || Object.keys(res).length === 0) {
       throw new BadRequestException('查找的资源不存在');
     }
+    delete res.password;
     return res;
   }
 
@@ -59,5 +61,10 @@ export class AccountService {
     await this.findOne(id);
     await this.accountRepository.delete(id);
     return true;
+  }
+  async setPassword(setPasswordAccountDto: SetPasswordAccountDto) {
+    return await this.update(setPasswordAccountDto.id, {
+      password: setPasswordAccountDto.password,
+    });
   }
 }
