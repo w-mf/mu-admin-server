@@ -4,6 +4,7 @@ import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { FindMenuDto } from './dto/find-menu.dto';
 import { JwtAuthGuard } from '~/common/guard/auth.guard';
+
 @Controller('system/menu')
 @UseGuards(JwtAuthGuard)
 export class MenuController {

@@ -6,7 +6,7 @@ import * as Winston from 'winston';
 import { WinstonModule } from 'nest-winston';
 import 'winston-daily-rotate-file';
 import * as pkgFile from '../package.json';
-const IS_PROD = process.env.NODE_ENV === ('production' || 'prod');
+const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV);
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: IS_PROD
@@ -58,4 +58,4 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
-bootstrap();
+bootstrap().then();
