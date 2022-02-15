@@ -71,3 +71,9 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+
+- BadRequestException 400 验证错误
+- Unauthorized 401 未授权、未登录
+- Forbidden 403 没有权限、 csrf 未鉴权
+- Precondition Failed 412	客户端请求信息的先决条件错误(已存在、不存在情况用)

@@ -1,13 +1,20 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
 import * as Winston from 'winston';
+import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
 import { WinstonModule } from 'nest-winston';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { knife4jSetup } from 'nest-knife4j';
+import Config from '~/config/config';
 import 'winston-daily-rotate-file';
 import * as pkgFile from '../package.json';
+
 const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV);
 async function bootstrap() {
+  const logger: Logger = new Logger('main.ts');
   const app = await NestFactory.create(AppModule, {
     logger: IS_PROD
       ? WinstonModule.createLogger({
@@ -48,14 +55,50 @@ async function bootstrap() {
       : undefined,
   });
 
+  //防止跨站脚本攻击
+  app.use(helmet());
+
+  app.use(cookieParser());
+  app.use(
+    session({
+      secret: Config().sessionSecret,
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
+
+  const PREFIX = 'api';
   app.setGlobalPrefix('api'); // 全局路由前缀
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // 去掉没有使用任何验证装饰器的属性的验证
     }),
   );
-  app.use(helmet());
-
-  await app.listen(3000);
+  if (!IS_PROD) {
+    const config = new DocumentBuilder()
+      .setTitle('mu后台管理系统 api 文档')
+      .setDescription('api接口文档')
+      .setBasePath(PREFIX)
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('docs', app, document);
+    knife4jSetup(app, {
+      urls: [
+        {
+          name: '1.X版本',
+          url: `/docs-json`,
+          swaggerVersion: '3.0',
+          location: `/docs-json`,
+        },
+      ],
+    });
+  }
+  const PORT = 3000;
+  await app.listen(PORT, () => {
+    logger.log(`服务已经启动,接口请访问:http://localhost:${PORT}/${PREFIX}`);
+    if (!IS_PROD) logger.log(`服务已经启动,接口文档请访问:http://localhost:${PORT}/doc.html`);
+  });
 }
 bootstrap().then();

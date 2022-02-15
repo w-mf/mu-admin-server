@@ -1,9 +1,16 @@
-import { PickType } from '@nestjs/mapped-types';
-import { CreateAccountDto } from './create-account.dto';
-import { IsInt, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class SetPasswordAccountDto extends PickType(CreateAccountDto, ['password'] as const) {
+export class SetPasswordAccountDto {
   @IsNotEmpty()
-  @IsInt()
-  readonly id: number;
+  @IsString()
+  @MaxLength(128)
+  @ApiProperty({ description: '用户旧密码。需经加密' })
+  readonly oldPassword: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(128)
+  @ApiProperty({ description: '用户新密码。需经加密' })
+  readonly newPassword: string;
 }

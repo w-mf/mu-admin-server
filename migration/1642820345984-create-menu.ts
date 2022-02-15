@@ -1,8 +1,8 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, TableIndex, Table } from 'typeorm';
 
 export class createMenu1642820345984 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.createTable(
+    await queryRunner.createTable(
       new Table({
         name: 'menu',
         columns: [
@@ -28,7 +28,7 @@ export class createMenu1642820345984 implements MigrationInterface {
             comment: '名称',
           },
           {
-            name: 'parentId',
+            name: 'parent_id',
             type: 'int',
             isNullable: true,
             comment: '父级节点',
@@ -63,21 +63,55 @@ export class createMenu1642820345984 implements MigrationInterface {
             comment: '排序。最大值 9999',
           },
           {
-            name: 'createdAt',
+            name: 'created_at',
             type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
           },
           {
-            name: 'updatedAt',
+            name: 'updated_at',
             type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'deleted_at',
+            type: 'timestamp',
+            isNullable: true,
           },
         ],
       }),
     );
+    await queryRunner.createIndex(
+      'menu',
+      new TableIndex({
+        name: 'IDX_MENU_PARENT',
+        columnNames: ['parent_id'],
+      }),
+    );
+    await queryRunner.query(
+      "INSERT INTO `menu` VALUES(1, 2, '首页', NULL, '/home', NULL, 1, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL)",
+    );
+    await queryRunner.query(
+      "INSERT INTO `menu` VALUES(2, 1, '系统管理', NULL, '/system', NULL, 1, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL)",
+    );
+    await queryRunner.query(
+      "INSERT INTO `menu` VALUES(3, 2, '用户管理', NULL, '/system/account', NULL, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL)",
+    );
+    await queryRunner.query(
+      "INSERT INTO `menu` VALUES(4, 2, '角色管理', NULL, '/system/role', NULL, 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL)",
+    );
+    await queryRunner.query(
+      "INSERT INTO `menu` VALUES(5, 2, '菜单管理', NULL, '/system/menu', NULL, 1, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL)",
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('menu');
+    await queryRunner.dropIndex(
+      'menu',
+      new TableIndex({
+        name: 'IDX_MENU_PARENT',
+        columnNames: ['parent_id'],
+      }),
+    );
+    await queryRunner.dropTable('menu');
   }
 }

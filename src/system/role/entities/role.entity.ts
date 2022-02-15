@@ -1,24 +1,42 @@
-import { Entity, Column } from 'typeorm';
-import { Base } from '~/common/entity/base.entity';
-@Entity()
-export class Role extends Base {
+import { Entity, Column, ManyToMany, JoinTable } from 'typeorm';
+import { BaseEntity } from '~/common/entity/base.entity';
+import { AccountEntity } from '../../account/entities/account.entity';
+import { MenuEntity } from '../../menu/entities/menu.entity';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+
+@Entity({ name: 'role' })
+export class RoleEntity extends BaseEntity {
+  @ApiHideProperty()
+  @ManyToMany(() => AccountEntity, (account) => account.roles)
+  accounts: AccountEntity[];
+
+  @ApiHideProperty()
+  @ManyToMany(() => MenuEntity, (menu) => menu.roles)
+  @JoinTable({ name: 'role_menu' })
+  menus: MenuEntity[];
+
+  @ApiHideProperty()
+  @Column({
+    name: 'allow_delete',
+    type: 'tinyint',
+    width: 1,
+    default: 1,
+    select: false,
+    readonly: true,
+    comment: '是否允许删除。1:允许，0: 不允许',
+  })
+  allowDelete: 1 | 0;
+
+  /** 角色名称 */
   @Column({
     name: 'name',
     type: 'varchar',
     length: '128',
-    comment: '名称',
     unique: true,
   })
   name: string;
 
-  @Column({
-    name: 'menuIds',
-    type: 'json',
-    comment: '菜单权限',
-    default: '[]',
-  })
-  menuIds: string;
-
+  /** 备注 */
   @Column({
     name: 'remark',
     type: 'varchar',
@@ -26,8 +44,9 @@ export class Role extends Base {
     nullable: true,
     comment: '备注',
   })
-  remark: string;
+  remark?: string;
 
+  /** 状态。1:正常，0: 停用 */
   @Column({
     name: 'status',
     type: 'tinyint',
@@ -35,5 +54,15 @@ export class Role extends Base {
     default: 1,
     comment: '状态。1:正常，0: 停用',
   })
+  @ApiProperty({ enum: [1, 0], default: 1 })
   status: 1 | 0;
+
+  /** 菜单权限id */
+  @Column({
+    name: 'menu_ids',
+    type: 'varchar',
+    nullable: true,
+    comment: ' 菜单权限id。多个用,分隔',
+  })
+  menuIds?: string;
 }
