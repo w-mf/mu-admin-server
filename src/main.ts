@@ -7,10 +7,10 @@ import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import { WinstonModule } from 'nest-winston';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { knife4jSetup } from 'nest-knife4j';
 import Config from '~/config/config';
 import 'winston-daily-rotate-file';
 import * as pkgFile from '../package.json';
+import * as fs from 'fs';
 
 const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV);
 async function bootstrap() {
@@ -83,22 +83,13 @@ async function bootstrap() {
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, config);
+    fs.writeFileSync('./static/swagger-docs.json', JSON.stringify(document));
     SwaggerModule.setup('docs', app, document);
-    knife4jSetup(app, {
-      urls: [
-        {
-          name: '1.X版本',
-          url: `/docs-json`,
-          swaggerVersion: '3.0',
-          location: `/docs-json`,
-        },
-      ],
-    });
   }
   const PORT = 3000;
   await app.listen(PORT, () => {
     logger.log(`服务已经启动,接口请访问:http://localhost:${PORT}/${PREFIX}`);
-    if (!IS_PROD) logger.log(`服务已经启动,接口文档请访问:http://localhost:${PORT}/doc.html`);
+    if (!IS_PROD) logger.log(`服务已经启动,接口文档请访问:http://localhost:${PORT}/docs`);
   });
 }
 bootstrap().then();

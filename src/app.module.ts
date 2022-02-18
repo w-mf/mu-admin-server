@@ -4,7 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SystemModule } from './system/system.module';
 import { AuthModule } from './auth/auth.module';
+
 import databaseConfig from './config/database.config';
+import { OtherModule } from './other/other.module';
 import config from './config/config';
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import config from './config/config';
     }),
     SystemModule,
     AuthModule,
+    OtherModule,
   ],
   providers: [Logger],
 })

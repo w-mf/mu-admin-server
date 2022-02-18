@@ -71,6 +71,19 @@ export class AccountService {
     return account;
   }
 
+  // 查找用户，使用userName 或 id
+  async findAccount(obj: { userName?: string; id?: number }, isFindAll = false) {
+    const queryBuilder = this.accountRepository.createQueryBuilder('account');
+    const select = await queryBuilder.select();
+    Object.keys(obj).forEach((key, index) => {
+      if (index === 0) select.where(`account.${key} = :${key}`, { [key]: obj[key] });
+      else select.andWhere(`account.${key} = :${key}`, { [key]: obj[key] });
+    });
+    if (isFindAll) {
+      return await select.addSelect('account.password').getOne();
+    }
+    return await select.getOne();
+  }
   async update(id: number, updateAccountDto: UpdateAccountDto) {
     const account = await this.findOne(id, true);
 
