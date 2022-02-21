@@ -33,8 +33,14 @@ export class MenuService {
     };
   }
 
-  async findAll() {
-    return await getTreeRepository(MenuEntity).findTrees();
+  //查询结果是否以tree格式返回
+  async findAll(isTree = true) {
+    if (isTree) return await getTreeRepository(MenuEntity).findTrees();
+    return await getTreeRepository(MenuEntity).find({
+      order: {
+        sort: 'ASC',
+      },
+    });
   }
 
   async findOne(id: number) {

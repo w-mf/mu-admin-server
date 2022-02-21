@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { MenuService } from './menu.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
@@ -20,10 +20,17 @@ export class MenuController {
     return this.menuService.create(createMenuDto);
   }
 
+  @Get('list')
+  @ApiOperation({ summary: '菜单列表' })
+  @ApiOkResponse({ description: '菜单内容', type: [MenuEntity] })
+  findList(): Promise<MenuEntity[]> {
+    return this.menuService.findAll(false);
+  }
+
   @Get('tree-list')
   @ApiOperation({ summary: '菜单树列表' })
   @ApiOkResponse({ description: '菜单内容 tree格式', type: [MenuTreeListVo] })
-  findAll(): Promise<MenuTreeListVo[]> {
+  findTreeList(): Promise<MenuTreeListVo[]> {
     return this.menuService.findAll();
   }
 

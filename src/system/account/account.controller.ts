@@ -57,4 +57,11 @@ export class AccountController {
   setPassword(@Param('id') id: string, @Body() setPasswordAccountDto: SetPasswordAccountDto): Promise<boolean> {
     return this.accountService.setPassword(+id, setPasswordAccountDto);
   }
+
+  @Get(':id/get-permissions')
+  @ApiOperation({ summary: '获取用户权限' })
+  @ApiOkResponse({ type: Array })
+  getPermissions(@Param('id') id: string): Promise<string[]> {
+    return this.accountService.getPermissions(+id);
+  }
 }

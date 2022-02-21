@@ -8,6 +8,7 @@ import { FindAccountDto } from './dto/find-account.dto';
 import { SetPasswordAccountDto } from './dto/setpassword-account.dto';
 import { RoleService } from '~/system/role/role.service';
 import { AuthService } from '~/auth/auth.service';
+import { MenuService } from '~/system/menu/menu.service';
 
 @Injectable()
 export class AccountService {
@@ -18,6 +19,7 @@ export class AccountService {
     private readonly roleService: RoleService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
+    private readonly menuService: MenuService,
   ) {}
 
   async create(createAccountDto: CreateAccountDto) {
@@ -116,5 +118,15 @@ export class AccountService {
       password: setPasswordAccountDto.newPassword,
     });
     return true;
+  }
+
+  async getPermissions(id) {
+    const account = await this.accountRepository.findOne({ where: { id }, relations: ['roles'] });
+    const menuIds = [];
+    account.roles.forEach((item) => {
+      if (item.menuIds) menuIds.push(...item.menuIds.split(','));
+    });
+    const menus = await this.menuService.findIds(menuIds);
+    return menus.map((item) => item.accessCode).filter((item) => item);
   }
 }
