@@ -6,13 +6,15 @@ import { UpdateAccountDto } from './dto/update-account.dto';
 import { FindAccountDto } from './dto/find-account.dto';
 import { SetPasswordAccountDto } from './dto/setpassword-account.dto';
 import { JwtAuthGuard } from '~/common/guard/auth.guard';
+import { PermissionsGuard } from '~/common/guard/permissions.guard';
+import { Permissions } from '~/common/decorators/permissions.decorator';
 import { AccountEntity } from './entities/account.entity';
 import { PagingListBaseOv, schemaHandle } from '~/common/ov/list.ov';
 
 @ApiTags('系统管理-用户')
 @ApiExtraModels(PagingListBaseOv)
 @Controller('system/account')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
@@ -61,6 +63,7 @@ export class AccountController {
   @Get(':id/get-permissions')
   @ApiOperation({ summary: '获取用户权限' })
   @ApiOkResponse({ type: Array })
+  @Permissions(['sys:account:getPermissions'])
   getPermissions(@Param('id') id: string): Promise<string[]> {
     return this.accountService.getPermissions(+id);
   }

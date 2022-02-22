@@ -120,13 +120,18 @@ export class AccountService {
     return true;
   }
 
-  async getPermissions(id) {
+  // 是否校验menuIds = all 的菜单
+  async getPermissions(id, isCheckAll = true) {
     const account = await this.accountRepository.findOne({ where: { id }, relations: ['roles'] });
     const menuIds = [];
     account.roles.forEach((item) => {
       if (item.menuIds) menuIds.push(...item.menuIds.split(','));
     });
-    const menus = await this.menuService.findIds(menuIds);
+    let menus;
+    if (menuIds.includes('all')) {
+      if (!isCheckAll) return 'all';
+      menus = await this.menuService.findAll(false);
+    } else menus = await this.menuService.findIds(menuIds);
     return menus.map((item) => item.accessCode).filter((item) => item);
   }
 }
