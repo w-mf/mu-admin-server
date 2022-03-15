@@ -77,3 +77,4 @@ Nest is [MIT licensed](LICENSE).
 - Unauthorized 401 未授权、未登录
 - Forbidden 403 没有权限、 csrf 未鉴权
 - Precondition Failed 412	客户端请求信息的先决条件错误(已存在、不存在情况用)
+- Not Implemented 501	服务器不支持请求的功能，无法完成请求

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiCreatedResponse, ApiOkResponse, ApiExtraModels } from '@nestjs/swagger';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
@@ -60,11 +60,12 @@ export class AccountController {
     return this.accountService.setPassword(+id, setPasswordAccountDto);
   }
 
-  @Get(':id/get-permissions')
+  @Get('get/permissions')
   @ApiOperation({ summary: '获取用户权限' })
   @ApiOkResponse({ type: Array })
   @Permissions(['sys:account:getPermissions'])
-  getPermissions(@Param('id') id: string): Promise<string[]> {
-    return this.accountService.getPermissions(+id);
+  getPermissions(@Req() req: any): Promise<string[]> {
+    const { userId } = req.user;
+    return this.accountService.getPermissions(+userId);
   }
 }

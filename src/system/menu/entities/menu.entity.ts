@@ -20,15 +20,15 @@ export class MenuEntity extends BaseEntity {
 
   @ApiHideProperty()
   @Column({
-    name: 'allow_delete',
+    name: 'sys_internal',
     type: 'tinyint',
     width: 1,
-    default: 1,
+    default: 0,
     select: false,
     readonly: true,
-    comment: '是否允许删除。1:允许，0: 不允许',
+    comment: '是否系统内置。1:是，0: 否',
   })
-  allowDelete: 1 | 0;
+  sysInternal: 1 | 0;
 
   /** 父级id */
   @Column({ name: 'parent_id', type: 'int', nullable: true })
@@ -39,10 +39,10 @@ export class MenuEntity extends BaseEntity {
     name: 'type',
     type: 'tinyint',
     width: 1,
-    comment: '类型。1:目录,2:菜单,3:按钮',
+    comment: '类型。1:菜单,2:按钮',
   })
-  @ApiProperty({ enum: [1, 2, 3] })
-  type: 1 | 2 | 3;
+  @ApiProperty({ enum: [1, 2] })
+  type: 1 | 2;
 
   /** 名称 */
   @Column({
@@ -60,25 +60,6 @@ export class MenuEntity extends BaseEntity {
     comment: '权限码',
   })
   accessCode: string;
-
-  /** 前端路由 */
-  @Column({
-    type: 'varchar',
-    length: '256',
-    name: 'route',
-    nullable: true,
-    comment: '前端路由',
-  })
-  route?: string;
-  /** 图标 */
-  @Column({
-    type: 'varchar',
-    length: '128',
-    name: 'icon',
-    nullable: true,
-    comment: '图标',
-  })
-  icon?: string;
 
   /** 是否显示。1:显示,0:不显示，默认1 */
   @Column({

@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateMenuDto {
   /** 类型。1:目录,2:菜单,3:按钮 */
-  @ApiProperty({ default: 1, enum: [1, 2, 3] })
+  @ApiProperty({ default: 1, enum: [1, 2] })
   @IsNotEmpty()
-  @IsIn([1, 2, 3])
-  readonly type: 1 | 2 | 3;
+  @IsIn([1, 2])
+  readonly type: 1 | 2;
 
   /** 名称 */
   @IsNotEmpty()
@@ -18,18 +18,6 @@ export class CreateMenuDto {
   @IsOptional()
   @IsInt()
   readonly parentId?: number;
-
-  /** 前端路由 */
-  @IsOptional()
-  @IsString()
-  @MaxLength(64)
-  readonly router?: string;
-
-  /** 图标 */
-  @IsOptional()
-  @IsString()
-  @MaxLength(32)
-  readonly icon?: string;
 
   /** 是否显示。1:显示,0:不显示，默认1 */
   @ApiProperty({ default: 1, enum: [1, 0] })

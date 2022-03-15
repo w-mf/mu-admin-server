@@ -1,4 +1,4 @@
-import { Injectable, PreconditionFailedException } from '@nestjs/common';
+import { Injectable, PreconditionFailedException, NotImplementedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getTreeRepository } from 'typeorm';
 import { MenuEntity } from './entities/menu.entity';
@@ -43,8 +43,14 @@ export class MenuService {
     });
   }
 
-  async findOne(id: number) {
-    const menu = await this.menuRepository.findOne(id);
+  async findOne(id: number, isFindAll = false) {
+    let menu;
+    if (isFindAll) {
+      const queryBuilder = this.menuRepository.createQueryBuilder('menu');
+      menu = await queryBuilder.select().where('menu.id = :id', { id }).addSelect('menu.sysInternal').getOne();
+    } else {
+      menu = await this.menuRepository.findOne(id);
+    }
     if (!menu || Object.keys(menu).length === 0) {
       throw new PreconditionFailedException('查找的资源不存在');
     }
@@ -58,7 +64,15 @@ export class MenuService {
   }
 
   async remove(id: number) {
-    await this.findOne(id);
+    const parentCategory = await this.findOne(id, true);
+    const childrenCount = await getTreeRepository(MenuEntity).countDescendants(parentCategory);
+    if (childrenCount > 1) {
+      throw new NotImplementedException('存在子菜单不允许删除');
+    }
+    console.log(parentCategory);
+    if (parentCategory.sysInternal) {
+      throw new NotImplementedException('该菜单为系统内置，不允许删除');
+    }
     await getTreeRepository(MenuEntity).softDelete(id);
     return true;
   }

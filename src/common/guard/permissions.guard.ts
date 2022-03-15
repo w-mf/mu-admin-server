@@ -10,6 +10,7 @@ export class PermissionsGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const permissions = this.reflector.get<string[]>(META_DATA.ACCESS_CODE, context.getHandler());
     // 没有配置permissions装饰器，默认不进行权限校验
+    console.log(permissions);
     if (!permissions) return true;
     const req = context.switchToHttp().getRequest();
     const { userId } = req.user;
