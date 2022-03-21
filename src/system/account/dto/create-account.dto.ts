@@ -2,9 +2,9 @@ import { IsString, MaxLength, IsIn, IsNotEmpty, IsMobilePhone, IsEmail, IsJSON, 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateAccountDto {
-  /** 角色id。多个,分隔 */
+  /** 角色ids */
   @IsNotEmpty()
-  readonly roleIds: string;
+  readonly roleIds: number[];
 
   /** 用户名 */
   @IsNotEmpty()

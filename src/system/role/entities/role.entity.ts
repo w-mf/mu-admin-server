@@ -17,15 +17,15 @@ export class RoleEntity extends BaseEntity {
 
   @ApiHideProperty()
   @Column({
-    name: 'allow_delete',
+    name: 'sys_internal',
     type: 'tinyint',
     width: 1,
-    default: 1,
+    default: 0,
     select: false,
     readonly: true,
-    comment: '是否允许删除。1:允许，0: 不允许',
+    comment: '是否系统内置。1:是，0: 否',
   })
-  allowDelete: 1 | 0;
+  sysInternal: 1 | 0;
 
   /** 角色名称 */
   @Column({

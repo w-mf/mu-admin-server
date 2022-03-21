@@ -7,9 +7,9 @@ import { FindAccountDto } from './dto/find-account.dto';
 import { SetPasswordAccountDto } from './dto/setpassword-account.dto';
 import { JwtAuthGuard } from '~/common/guard/auth.guard';
 import { PermissionsGuard } from '~/common/guard/permissions.guard';
-import { Permissions } from '~/common/decorators/permissions.decorator';
-import { AccountEntity } from './entities/account.entity';
+import { ResetPasswordAccountDto } from './dto/reset-password-account.dto';
 import { PagingListBaseOv, schemaHandle } from '~/common/ov/list.ov';
+import { AccountOv } from './ov/account.ov';
 
 @ApiTags('系统管理-用户')
 @ApiExtraModels(PagingListBaseOv)
@@ -20,36 +20,36 @@ export class AccountController {
 
   @Post()
   @ApiOperation({ summary: '创建系统用户' })
-  @ApiCreatedResponse({ description: '创建成功的系统用户信息', type: AccountEntity })
-  create(@Body() createAccountDto: CreateAccountDto): Promise<AccountEntity> {
+  @ApiCreatedResponse({ description: '创建成功的系统用户信息', type: AccountOv })
+  create(@Body() createAccountDto: CreateAccountDto): Promise<AccountOv> {
     return this.accountService.create(createAccountDto);
   }
 
   @Get()
   @ApiOperation({ summary: '查看系统用户。分页' })
-  @ApiOkResponse({ description: '分页查询信息', schema: schemaHandle(PagingListBaseOv, AccountEntity) })
-  findAll(@Query() findAccountDto: FindAccountDto): Promise<PagingListBaseOv<AccountEntity>> {
-    return this.accountService.findAll(findAccountDto);
+  @ApiOkResponse({ description: '分页查询信息', schema: schemaHandle(PagingListBaseOv, AccountOv) })
+  findAll(@Query() findAccountDto: FindAccountDto): Promise<PagingListBaseOv<AccountOv>> {
+    return this.accountService.findAll(findAccountDto) as any;
   }
 
   @Get(':id')
   @ApiOperation({ summary: '查询用户详细' })
-  @ApiOkResponse({ description: '用户详细信息', type: AccountEntity })
-  findOne(@Param('id') id: string): Promise<AccountEntity> {
+  @ApiOkResponse({ description: '用户详细信息', type: AccountOv })
+  findOne(@Param('id') id: string): Promise<AccountOv> {
     return this.accountService.findOne(+id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: '更改用户信息' })
-  @ApiOkResponse({ description: '用户详细信息', type: AccountEntity })
-  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto): Promise<AccountEntity> {
+  @ApiOkResponse({ type: Boolean })
+  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto): Promise<boolean> {
     return this.accountService.update(+id, updateAccountDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: '删除用户' })
   @ApiOkResponse({ type: Boolean })
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<boolean> {
     return this.accountService.remove(+id);
   }
 
@@ -60,12 +60,10 @@ export class AccountController {
     return this.accountService.setPassword(+id, setPasswordAccountDto);
   }
 
-  @Get('get/permissions')
-  @ApiOperation({ summary: '获取用户权限' })
-  @ApiOkResponse({ type: Array })
-  @Permissions(['sys:account:getPermissions'])
-  getPermissions(@Req() req: any): Promise<string[]> {
-    const { userId } = req.user;
-    return this.accountService.getPermissions(+userId);
+  @Post(':id/reset-password')
+  @ApiOperation({ summary: '重置用户密码' })
+  @ApiOkResponse({ type: Boolean })
+  resetPassword(@Param('id') id: string, @Body() resetPasswordAccountDto: ResetPasswordAccountDto): Promise<boolean> {
+    return this.accountService.resetPassword(+id, resetPasswordAccountDto.password);
   }
 }

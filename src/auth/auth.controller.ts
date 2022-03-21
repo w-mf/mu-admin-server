@@ -1,10 +1,11 @@
-import { Controller, Body, Post, Req, HttpCode, UseGuards } from '@nestjs/common';
+import { Controller, Body, Post, Req, HttpCode, UseGuards, Get } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { EncryptionDto } from './dto/encryption.dto';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginOv } from './auth.ov';
+import { Permissions } from '~/common/decorators/permissions.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -27,5 +28,14 @@ export class AuthController {
   @ApiOkResponse({ description: '返回加密后的字符串', type: String })
   async encryption(@Body() encryptionDto: EncryptionDto): Promise<string> {
     return this.authService.encryption(encryptionDto);
+  }
+
+  @Get('permissions')
+  @ApiOperation({ summary: '获取用户权限' })
+  @ApiOkResponse({ description: '权限列表', type: Array })
+  @Permissions(['sys:account:getPermissions'])
+  getPermissions(@Req() req: any): Promise<string[]> {
+    const { userId } = req.user;
+    return this.authService.getPermissions(+userId);
   }
 }

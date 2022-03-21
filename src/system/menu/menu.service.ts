@@ -69,7 +69,6 @@ export class MenuService {
     if (childrenCount > 1) {
       throw new NotImplementedException('存在子菜单不允许删除');
     }
-    console.log(parentCategory);
     if (parentCategory.sysInternal) {
       throw new NotImplementedException('该菜单为系统内置，不允许删除');
     }

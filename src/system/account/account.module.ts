@@ -6,9 +6,15 @@ import { AccountEntity } from './entities/account.entity';
 import { RoleModule } from '~/system/role/role.module';
 import { AuthModule } from '~/auth/auth.module';
 import { MenuModule } from '~/system/menu/menu.module';
-
+import { ConfigModule } from '@nestjs/config';
 @Module({
-  imports: [TypeOrmModule.forFeature([AccountEntity]), RoleModule, forwardRef(() => AuthModule), MenuModule],
+  imports: [
+    TypeOrmModule.forFeature([AccountEntity]),
+    RoleModule,
+    forwardRef(() => AuthModule),
+    MenuModule,
+    ConfigModule,
+  ],
   controllers: [AccountController],
   providers: [AccountService],
   exports: [AccountService],

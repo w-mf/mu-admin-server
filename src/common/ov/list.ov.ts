@@ -1,5 +1,4 @@
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
-import { AccountEntity } from '~/system/account/entities/account.entity';
 
 export class PagingListBaseOv<TData> {
   @ApiProperty({ description: '列表总条数' })
@@ -24,6 +23,7 @@ export const schemaHandle = (ov1, ov2) => ({
           items: { $ref: getSchemaPath(ov2) },
         },
       },
+      required: ['list'],
     },
   ],
 });

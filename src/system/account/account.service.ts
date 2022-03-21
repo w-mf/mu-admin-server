@@ -9,13 +9,13 @@ import { SetPasswordAccountDto } from './dto/setpassword-account.dto';
 import { RoleService } from '~/system/role/role.service';
 import { AuthService } from '~/auth/auth.service';
 import { MenuService } from '~/system/menu/menu.service';
-
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class AccountService {
   constructor(
+    private configService: ConfigService,
     @InjectRepository(AccountEntity)
     private readonly accountRepository: Repository<AccountEntity>,
-
     private readonly roleService: RoleService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
@@ -32,11 +32,10 @@ export class AccountService {
     const account: AccountEntity = this.accountRepository.create(createAccountDto);
 
     if (createAccountDto.roleIds) {
-      const ids = createAccountDto.roleIds.split(',').map((item) => +item);
-      account.roles = await this.roleService.findIds(ids);
+      account.roles = await this.roleService.findIds(createAccountDto.roleIds);
     }
     //创建新用户的默认密码
-    account.password = await this.authService.encryption({ str: '123456' });
+    account.password = await this.authService.encryption({ str: this.configService.get('createAccountPass') });
     const res = await this.accountRepository.save(account);
     return await this.findOne(res.id);
   }
@@ -44,17 +43,23 @@ export class AccountService {
   async findAll(findAccountDto: FindAccountDto) {
     const { pageNo, pageSize } = findAccountDto;
     const [accounts, total] = await this.accountRepository.findAndCount({
+      relations: ['roles'],
       order: {
         id: 'ASC',
       },
       skip: (pageNo - 1) * pageSize,
       take: pageSize,
     });
+    const list = accounts.map((item) => ({
+      ...item,
+      roles: undefined,
+      roleList: item.roles.map((i) => ({ id: i.id, name: i.name })),
+    }));
     return {
       total,
       pageNo,
       pageSize,
-      list: accounts,
+      list,
     };
   }
 
@@ -65,12 +70,18 @@ export class AccountService {
       const queryBuilder = this.accountRepository.createQueryBuilder('account');
       account = await queryBuilder.select().where('account.id = :id', { id }).addSelect('account.password').getOne();
     } else {
-      account = await this.accountRepository.findOne(id);
+      account = await this.accountRepository.findOne(id, {
+        relations: ['roles'],
+      });
     }
     if (!account || Object.keys(account).length === 0) {
       throw new PreconditionFailedException('查找的资源不存在');
     }
-    return account;
+    return {
+      ...account,
+      roles: undefined,
+      roleList: account.roles.map((item) => ({ id: item.id, name: item.name })),
+    };
   }
 
   // 查找用户，使用userName 或 id
@@ -87,11 +98,9 @@ export class AccountService {
     return await select.getOne();
   }
   async update(id: number, updateAccountDto: UpdateAccountDto) {
-    const account = await this.findOne(id, true);
-
+    const account = await this.findOne(id);
     if (updateAccountDto.roleIds) {
-      const ids = updateAccountDto.roleIds.split(',').map((item) => +item);
-      account.roles = await this.roleService.findIds(ids);
+      account.roles = await this.roleService.findIds(updateAccountDto.roleIds);
     }
     //  筛查修改的用户名是否已经存在
     const hasName = await this.accountRepository.findOne({
@@ -100,14 +109,21 @@ export class AccountService {
     if (hasName) {
       throw new PreconditionFailedException(`“${updateAccountDto.userName}”已存在`);
     }
-
-    const res = await this.accountRepository.save(Object.assign(account, updateAccountDto));
-    return this.accountRepository.findOne(res.id);
+    await this.accountRepository.save(Object.assign(account, updateAccountDto));
+    return true;
   }
 
   async remove(id: number) {
     await this.findOne(id);
     await this.accountRepository.softDelete(id);
+    return true;
+  }
+
+  async resetPassword(id: number, password: string | undefined) {
+    await this.findOne(id);
+    await this.accountRepository.update(id, {
+      password: password || this.configService.get('createAccountPass'),
+    });
     return true;
   }
 

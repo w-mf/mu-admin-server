@@ -12,23 +12,15 @@ export class AccountEntity extends BaseEntity {
 
   @ApiHideProperty()
   @Column({
-    name: 'allow_delete',
+    name: 'sys_internal',
     type: 'tinyint',
     width: 1,
-    default: 1,
+    default: 0,
     select: false,
     readonly: true,
-    comment: '是否允许删除。1:允许，0: 不允许',
+    comment: '是否系统内置。1:是，0: 否',
   })
-  allowDelete: 1 | 0;
-
-  /** 角色id集合。多个用,分隔*/
-  @Column({
-    name: 'role_ids',
-    type: 'varchar',
-    comment: ' 角色id集合。多个用,分隔',
-  })
-  roleIds?: string;
+  sysInternal: 1 | 0;
 
   /** 用户名,唯一 */
   @Column({
@@ -96,6 +88,7 @@ export class AccountEntity extends BaseEntity {
   status: 1 | 0;
 
   /** 密码 */
+  @ApiHideProperty()
   @Column({
     name: 'password',
     type: 'varchar',

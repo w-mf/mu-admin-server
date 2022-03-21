@@ -45,4 +45,9 @@ export class AuthService {
   async decryption(data: EncryptionDto) {
     return aesDecryption(data.str, this.aesKey, this.aesIv);
   }
+
+  // 是否校验menuIds = all 的菜单
+  async getPermissions(id, isCheckAll = true) {
+    return await this.accountService.getPermissions(id, isCheckAll);
+  }
 }

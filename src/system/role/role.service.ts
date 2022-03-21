@@ -34,8 +34,15 @@ export class RoleService {
       menus: undefined,
     };
   }
-
-  async findAll(findRoleDto: FindRoleDto) {
+  async findAll() {
+    const res = await this.roleRepository.find({
+      order: {
+        id: 'ASC',
+      },
+    });
+    return res.map((item) => ({ label: item.name, value: item.id }));
+  }
+  async findPage(findRoleDto: FindRoleDto) {
     const { pageNo, pageSize } = findRoleDto;
     const [roles, total] = await this.roleRepository.findAndCount({
       order: {
@@ -52,8 +59,14 @@ export class RoleService {
     };
   }
 
-  async findOne(id: number) {
-    const role = await this.roleRepository.findOne(id);
+  async findOne(id: number, isFindAll = false) {
+    let role;
+    if (isFindAll) {
+      const queryBuilder = this.roleRepository.createQueryBuilder('role');
+      role = await queryBuilder.select().where('role.id = :id', { id }).addSelect('role.sysInternal').getOne();
+    } else {
+      role = await this.roleRepository.findOne(id);
+    }
     if (!role || Object.keys(role).length === 0) {
       throw new PreconditionFailedException('查找的资源不存在');
     }
@@ -61,20 +74,9 @@ export class RoleService {
   }
 
   async update(id: number, updateRoleDto: UpdateRoleDto) {
-    const role = await this.findOne(id);
-    const newRole = {
-      ...role,
-      ...updateRoleDto,
-    };
-    if (updateRoleDto.menuIds) {
-      const ids = updateRoleDto.menuIds.split(',').map((item) => +item);
-      newRole.menus = await this.menuService.findIds(ids);
-    }
-    const res = await this.roleRepository.save(newRole);
-    return {
-      ...res,
-      menus: undefined,
-    };
+    await this.findOne(id);
+    await this.roleRepository.update(id, updateRoleDto);
+    return await this.findOne(id);
   }
 
   async remove(id: number) {
