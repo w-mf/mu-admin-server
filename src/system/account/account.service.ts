@@ -65,6 +65,7 @@ export class AccountService {
 
   // isFindAll 是否查找包括select=false的字段
   async findOne(id: number, isFindAll = false) {
+    if (!id) throw new PreconditionFailedException('用户信息异常');
     let account;
     if (isFindAll) {
       const queryBuilder = this.accountRepository.createQueryBuilder('account');
@@ -86,7 +87,10 @@ export class AccountService {
 
   // 查找用户，使用userName 或 id
   async findAccount(obj: { userName?: string; id?: number }, isFindAll = false) {
-    const queryBuilder = this.accountRepository.createQueryBuilder('account');
+    const queryBuilder = this.accountRepository
+      .createQueryBuilder('account')
+      .leftJoinAndSelect('account.roles', 'role');
+
     const select = await queryBuilder.select();
     Object.keys(obj).forEach((key, index) => {
       if (index === 0) select.where(`account.${key} = :${key}`, { [key]: obj[key] });
@@ -135,19 +139,19 @@ export class AccountService {
     });
     return true;
   }
-
-  // 是否校验menuIds = all 的菜单
-  async getPermissions(id, isCheckAll = true) {
+  // 获取用户权限
+  async getPermissions(id) {
+    if (!id) throw new PreconditionFailedException('用户信息异常');
     const account = await this.accountRepository.findOne({ where: { id }, relations: ['roles'] });
     const menuIds = [];
+
+    let isAdmin = false; // 是否为超级管理员
     account.roles.forEach((item) => {
+      if (item.id === 1) isAdmin = true;
       if (item.menuIds) menuIds.push(...item.menuIds.split(','));
     });
-    let menus;
-    if (menuIds.includes('all')) {
-      if (!isCheckAll) return 'all';
-      menus = await this.menuService.findAll(false);
-    } else menus = await this.menuService.findIds(menuIds);
+
+    const menus = isAdmin ? await this.menuService.findAll(false) : await this.menuService.findIds(menuIds);
     return menus.map((item) => item.accessCode).filter((item) => item);
   }
 }

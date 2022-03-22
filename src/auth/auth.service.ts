@@ -5,7 +5,7 @@ import { EncryptionDto } from './dto/encryption.dto';
 import { aesEncryption, aesDecryption } from '~/common/utils/crypto';
 import { ConfigService } from '@nestjs/config';
 import { AccountEntity } from '~/system/account/entities/account.entity';
-
+import type { IJwtPayload } from './jwt.strategy';
 @Injectable()
 export class AuthService {
   aesIv;
@@ -20,9 +20,14 @@ export class AuthService {
     this.aesKey = Buffer.from(this.configService.get('AES_KEY'));
     this.aesIv = Buffer.from(this.configService.get('AES_IV'));
   }
-
   async login(account: AccountEntity) {
-    const payload = { userName: account.userName, sub: account.id };
+    const permissions = await this.accountService.getPermissions(account.id);
+    const payload: IJwtPayload = {
+      userName: account.userName,
+      sub: account.id,
+      isAdmin: account.roles.findIndex((item) => item.id === 1) > -1,
+      permissions,
+    };
     return {
       accessToken: this.jwtService.sign(payload),
     };
@@ -44,10 +49,5 @@ export class AuthService {
   }
   async decryption(data: EncryptionDto) {
     return aesDecryption(data.str, this.aesKey, this.aesIv);
-  }
-
-  // 是否校验menuIds = all 的菜单
-  async getPermissions(id, isCheckAll = true) {
-    return await this.accountService.getPermissions(id, isCheckAll);
   }
 }

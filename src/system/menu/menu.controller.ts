@@ -6,14 +6,17 @@ import { JwtAuthGuard } from '~/common/guard/auth.guard';
 import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { MenuTreeListVo } from './vo/menu.vo';
 import { MenuEntity } from './entities/menu.entity';
+import { Permissions } from '~/common/decorators/permissions.decorator';
+import { PermissionsGuard } from '~/common/guard/permissions.guard';
 
 @ApiTags('系统管理-菜单')
 @Controller('system/menu')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
   @Post()
+  @Permissions(['sys:menu:add'])
   @ApiOperation({ summary: '新建菜单' })
   @ApiCreatedResponse({ description: '新建菜单内容', type: MenuEntity })
   create(@Body() createMenuDto: CreateMenuDto): Promise<MenuEntity> {
@@ -21,6 +24,7 @@ export class MenuController {
   }
 
   @Get('list')
+  @Permissions(['sys:menu:list'])
   @ApiOperation({ summary: '菜单列表' })
   @ApiOkResponse({ description: '菜单内容', type: [MenuEntity] })
   findList(): Promise<MenuEntity[]> {
@@ -35,6 +39,7 @@ export class MenuController {
   }
 
   @Get(':id')
+  @Permissions(['sys:menu:view'])
   @ApiOperation({ summary: '根据id查菜单详情（不含子级)）' })
   @ApiOkResponse({ description: '菜单详情', type: MenuEntity })
   findOne(@Param('id', new ParseIntPipe()) id: number): Promise<MenuEntity> {
@@ -42,6 +47,7 @@ export class MenuController {
   }
 
   @Patch(':id')
+  @Permissions(['sys:menu:update'])
   @ApiOperation({ summary: '更新菜单详情' })
   @ApiOkResponse({ description: '菜单详情', type: MenuEntity })
   update(@Param('id', new ParseIntPipe()) id: number, @Body() updateMenuDto: UpdateMenuDto): Promise<MenuEntity> {
@@ -49,6 +55,7 @@ export class MenuController {
   }
 
   @Delete(':id')
+  @Permissions(['sys:menu:remove'])
   @ApiOperation({ summary: '删除菜单' })
   @ApiOkResponse({ type: Boolean })
   remove(@Param('id', new ParseIntPipe()) id: number): Promise<boolean> {

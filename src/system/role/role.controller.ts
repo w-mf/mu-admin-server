@@ -8,15 +8,18 @@ import { ApiCreatedResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTag
 import { PagingListBaseOv, schemaHandle } from '~/common/ov/list.ov';
 import { RoleSimpleListOv } from '~/system/role/ov/listMenu.ov';
 import { RoleEntity } from '~/system/role/entities/role.entity';
+import { PermissionsGuard } from '~/common/guard/permissions.guard';
+import { Permissions } from '~/common/decorators/permissions.decorator';
 
 @ApiTags('系统管理-角色')
 @ApiExtraModels(PagingListBaseOv)
 @Controller('system/role')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post()
+  @Permissions(['sys:role:add'])
   @ApiOperation({ summary: '新增角色' })
   @ApiCreatedResponse({ description: '角色详情', type: RoleEntity })
   create(@Body() createRoleDto: CreateRoleDto): Promise<RoleEntity> {
@@ -24,6 +27,7 @@ export class RoleController {
   }
 
   @Get()
+  @Permissions(['sys:role:list'])
   @ApiOperation({ summary: '查询角色，分页' })
   @ApiOkResponse({ description: '分页查询信息', schema: schemaHandle(PagingListBaseOv, RoleEntity) })
   findAll(@Query() findRoleDto: FindRoleDto): Promise<PagingListBaseOv<RoleEntity>> {
@@ -37,6 +41,7 @@ export class RoleController {
   }
 
   @Get(':id')
+  @Permissions(['sys:role:view'])
   @ApiOperation({ summary: '查询角色详情' })
   @ApiOkResponse({ type: RoleEntity })
   findOne(@Param('id') id: string): Promise<RoleEntity> {
@@ -44,6 +49,7 @@ export class RoleController {
   }
 
   @Patch(':id')
+  @Permissions(['sys:role:update'])
   @ApiOperation({ summary: '更新角色信息' })
   @ApiOkResponse({ type: RoleEntity })
   update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto): Promise<RoleEntity> {
@@ -51,6 +57,7 @@ export class RoleController {
   }
 
   @Delete(':id')
+  @Permissions(['sys:role:remove'])
   @ApiOperation({ summary: '删除角色' })
   @ApiOkResponse({ type: Boolean })
   remove(@Param('id') id: string): Promise<boolean> {
