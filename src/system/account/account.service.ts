@@ -1,4 +1,11 @@
-import { Injectable, BadRequestException, PreconditionFailedException, Inject, forwardRef } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  PreconditionFailedException,
+  Inject,
+  forwardRef,
+  NotImplementedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not } from 'typeorm';
 import { AccountEntity } from './entities/account.entity';
@@ -118,7 +125,10 @@ export class AccountService {
   }
 
   async remove(id: number) {
-    await this.findOne(id);
+    const res = await this.findOne(id);
+    if (res.sysInternal) {
+      throw new NotImplementedException('该记录为系统内置，不允许删除');
+    }
     await this.accountRepository.softDelete(id);
     return true;
   }

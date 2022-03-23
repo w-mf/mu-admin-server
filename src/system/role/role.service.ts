@@ -1,4 +1,4 @@
-import { Injectable, PreconditionFailedException } from '@nestjs/common';
+import { Injectable, NotImplementedException, PreconditionFailedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RoleEntity } from './entities/role.entity';
@@ -80,7 +80,10 @@ export class RoleService {
   }
 
   async remove(id: number) {
-    await this.findOne(id);
+    const res = await this.findOne(id);
+    if (res.sysInternal) {
+      throw new NotImplementedException('该记录为系统内置，不允许删除');
+    }
     await this.roleRepository.softDelete(id);
     return true;
   }

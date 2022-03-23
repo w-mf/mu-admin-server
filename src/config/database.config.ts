@@ -15,7 +15,7 @@ export default registerAs('database', () => ({
   migrations: ['dist/migration/*{.ts,.js}'],
   namingStrategy: new SnakeNamingStrategy(),
   logging: false,
-  synchronize: true,
+  synchronize: false,
   cli: {
     migrationsDir: './migration',
   },

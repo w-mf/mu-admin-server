@@ -74,8 +74,7 @@ export class MenuEntity extends BaseEntity {
 
   /** 排序 */
   @Column({
-    type: 'tinyint',
-    width: 4,
+    type: 'int',
     name: 'sort',
     unsigned: true,
     nullable: true,
