@@ -5,6 +5,7 @@ import { LoginDto } from './dto/login.dto';
 import { EncryptionDto } from './dto/encryption.dto';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginOv } from './auth.ov';
+import { JwtAuthGuard } from '~/common/guard/auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -27,5 +28,16 @@ export class AuthController {
   @ApiOkResponse({ description: '返回加密后的字符串', type: String })
   async encryption(@Body() encryptionDto: EncryptionDto): Promise<string> {
     return this.authService.encryption(encryptionDto);
+  }
+
+  @Post('refresh-token')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  @ApiOperation({ summary: '刷新token' })
+  @ApiOkResponse({ description: '刷新成功，返回token', type: LoginOv })
+  async refreshToken(@Req() req) {
+    const authorization = req.headers.authorization || '';
+    const token = authorization.split(' ').length > 1 ? authorization.split(' ')[1] : null;
+    return this.authService.refreshToken(token);
   }
 }

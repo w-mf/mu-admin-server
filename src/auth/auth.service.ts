@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, BadRequestException, UnauthorizedException, Inject, forwardRef } from '@nestjs/common';
 import { AccountService } from '~/system/account/account.service';
 import { JwtService } from '@nestjs/jwt';
 import { EncryptionDto } from './dto/encryption.dto';
@@ -30,6 +30,16 @@ export class AuthService {
     };
     return {
       accessToken: this.jwtService.sign(payload),
+    };
+  }
+  async refreshToken(token: string) {
+    if (!token) throw new UnauthorizedException('未获取到认证信息，请重新登录');
+    // 解析现有的token，重新生成 token
+    const obj: IJwtPayload & { iat: number; exp: number } = this.jwtService.decode(token) as any;
+    delete obj.iat;
+    delete obj.exp;
+    return {
+      accessToken: this.jwtService.sign(obj),
     };
   }
   // 验证登录用户
