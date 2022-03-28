@@ -5,9 +5,9 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import Config from '~/config/config';
-import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule } from '@nestjs/config';
+import { LoginLogModule } from '~/log/login-log/login-log.module';
 
 @Global()
 @Module({
@@ -19,9 +19,10 @@ import { ConfigModule } from '@nestjs/config';
       signOptions: { expiresIn: Config().jwtConstants.expiresIn },
     }),
     ConfigModule,
+    LoginLogModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, JwtStrategy],
   exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

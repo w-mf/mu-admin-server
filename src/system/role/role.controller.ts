@@ -5,14 +5,14 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { FindRoleDto } from './dto/find-role.dto';
 import { JwtAuthGuard } from '~/common/guard/auth.guard';
 import { ApiCreatedResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PagingListBaseOv, schemaHandle } from '~/common/ov/list.ov';
-import { RoleSimpleListOv } from '~/system/role/ov/listMenu.ov';
+import { PagingListBaseVo, schemaHandle } from '~/common/vo/list.vo';
+import { RoleSimpleListVo } from '~/system/role/vo/listMenu.vo';
 import { RoleEntity } from '~/system/role/entities/role.entity';
 import { PermissionsGuard } from '~/common/guard/permissions.guard';
 import { Permissions } from '~/common/decorators/permissions.decorator';
 
 @ApiTags('系统管理-角色')
-@ApiExtraModels(PagingListBaseOv)
+@ApiExtraModels(PagingListBaseVo)
 @Controller('system/role')
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 export class RoleController {
@@ -29,14 +29,14 @@ export class RoleController {
   @Get()
   @Permissions(['sys:role:list'])
   @ApiOperation({ summary: '查询角色，分页' })
-  @ApiOkResponse({ description: '分页查询信息', schema: schemaHandle(PagingListBaseOv, RoleEntity) })
-  findAll(@Query() findRoleDto: FindRoleDto): Promise<PagingListBaseOv<RoleEntity>> {
+  @ApiOkResponse({ description: '分页查询信息', schema: schemaHandle(PagingListBaseVo, RoleEntity) })
+  findAll(@Query() findRoleDto: FindRoleDto): Promise<PagingListBaseVo<RoleEntity>> {
     return this.roleService.findPage(findRoleDto);
   }
   @Get('simple-list')
   @ApiOperation({ summary: '查询角色,枚举' })
-  @ApiOkResponse({ type: [RoleSimpleListOv] })
-  findAllSimple(): Promise<RoleSimpleListOv[]> {
+  @ApiOkResponse({ type: [RoleSimpleListVo] })
+  findAllSimple(): Promise<RoleSimpleListVo[]> {
     return this.roleService.findAll();
   }
 

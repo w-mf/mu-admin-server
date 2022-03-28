@@ -8,6 +8,7 @@ export default registerAs('database', () => ({
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASS,
   timezone: '+08:00',
+  dateStrings: true,
   cache: {
     duration: 60000, // 1分钟的缓存
   },

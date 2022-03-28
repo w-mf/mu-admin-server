@@ -8,12 +8,12 @@ import { SetPasswordAccountDto } from './dto/setpassword-account.dto';
 import { JwtAuthGuard } from '~/common/guard/auth.guard';
 import { PermissionsGuard } from '~/common/guard/permissions.guard';
 import { ResetPasswordAccountDto } from './dto/reset-password-account.dto';
-import { PagingListBaseOv, schemaHandle } from '~/common/ov/list.ov';
-import { AccountOv } from './ov/account.ov';
+import { PagingListBaseVo, schemaHandle } from '~/common/vo/list.vo';
+import { AccountVo } from './vo/account.vo';
 import { Permissions } from '~/common/decorators/permissions.decorator';
 
 @ApiTags('系统管理-用户')
-@ApiExtraModels(PagingListBaseOv)
+@ApiExtraModels(PagingListBaseVo)
 @Controller('system/account')
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 export class AccountController {
@@ -22,16 +22,16 @@ export class AccountController {
   @Post()
   @Permissions(['sys:account:add'])
   @ApiOperation({ summary: '创建系统用户' })
-  @ApiCreatedResponse({ description: '创建成功的系统用户信息', type: AccountOv })
-  create(@Body() createAccountDto: CreateAccountDto): Promise<AccountOv> {
+  @ApiCreatedResponse({ description: '创建成功的系统用户信息', type: AccountVo })
+  create(@Body() createAccountDto: CreateAccountDto): Promise<AccountVo> {
     return this.accountService.create(createAccountDto);
   }
 
   @Get()
   @Permissions(['sys:account:list'])
   @ApiOperation({ summary: '查看系统用户。分页' })
-  @ApiOkResponse({ description: '分页查询信息', schema: schemaHandle(PagingListBaseOv, AccountOv) })
-  findAll(@Query() findAccountDto: FindAccountDto): Promise<PagingListBaseOv<AccountOv>> {
+  @ApiOkResponse({ description: '分页查询信息', schema: schemaHandle(PagingListBaseVo, AccountVo) })
+  findAll(@Query() findAccountDto: FindAccountDto): Promise<PagingListBaseVo<AccountVo>> {
     return this.accountService.findAll(findAccountDto) as any;
   }
 
@@ -46,8 +46,8 @@ export class AccountController {
   @Get(':id')
   @Permissions(['sys:account:view'])
   @ApiOperation({ summary: '查询用户详细' })
-  @ApiOkResponse({ description: '用户详细信息', type: AccountOv })
-  findOne(@Param('id') id: string): Promise<AccountOv> {
+  @ApiOkResponse({ description: '用户详细信息', type: AccountVo })
+  findOne(@Param('id') id: string): Promise<AccountVo> {
     return this.accountService.findOne(+id);
   }
 

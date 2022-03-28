@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 
 import databaseConfig from './config/database.config';
 import { OtherModule } from './other/other.module';
+import { LogModule } from './log/log.module';
 import config from './config/config';
 
 @Module({
@@ -22,6 +23,7 @@ import config from './config/config';
     SystemModule,
     AuthModule,
     OtherModule,
+    LogModule,
   ],
   providers: [Logger],
 })

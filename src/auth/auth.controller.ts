@@ -1,11 +1,11 @@
 import { Controller, Body, Post, Req, HttpCode, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { EncryptionDto } from './dto/encryption.dto';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { LoginOv } from './auth.ov';
+import { LoginVo } from './auth.vo';
 import { JwtAuthGuard } from '~/common/guard/auth.guard';
+import { Request } from 'express';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -13,13 +13,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  @UseGuards(AuthGuard('local'))
   @HttpCode(200)
   @ApiOperation({ summary: '登录' })
-  @ApiOkResponse({ description: '登录成功,返回token', type: LoginOv })
-  async login(@Body() loginDto: LoginDto, @Req() req) {
+  @ApiOkResponse({ description: '登录成功,返回token', type: LoginVo })
+  async login(@Body() loginDto: LoginDto, @Req() req: Request) {
     //通过req可以获取到validate方法返回的user
-    return this.authService.login(req.user);
+    return this.authService.login(loginDto, req);
   }
 
   @Post('encryption')
@@ -34,7 +33,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @ApiOperation({ summary: '刷新token' })
-  @ApiOkResponse({ description: '刷新成功，返回token', type: LoginOv })
+  @ApiOkResponse({ description: '刷新成功，返回token', type: LoginVo })
   async refreshToken(@Req() req) {
     const authorization = req.headers.authorization || '';
     const token = authorization.split(' ').length > 1 ? authorization.split(' ')[1] : null;
