@@ -1,5 +1,5 @@
-import { IsString, MaxLength, IsIn, IsNotEmpty, IsMobilePhone, IsEmail, IsJSON, IsOptional } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, MaxLength, IsIn, IsNotEmpty, IsMobilePhone, IsEmail, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAccountDto {
   /** 角色ids */
