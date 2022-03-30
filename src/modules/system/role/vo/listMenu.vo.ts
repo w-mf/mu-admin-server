@@ -1,4 +1,4 @@
-import { RoleEntity } from '~/system/role/entities/role.entity';
+import { RoleEntity } from '~/modules/system/role/entities/role.entity';
 
 export class RoleSimpleListVo {
   /** role id */

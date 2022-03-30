@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RoleService } from './role.service';
-import { MenuModule } from '~/system/menu/menu.module';
+import { MenuModule } from '~/modules/system/menu/menu.module';
 import { RoleController } from './role.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoleEntity } from './entities/role.entity';

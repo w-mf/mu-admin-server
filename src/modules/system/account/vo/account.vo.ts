@@ -1,5 +1,5 @@
-import { AccountEntity } from '~/system/account/entities/account.entity';
-import { RoleEntity } from '~/system/role/entities/role.entity';
+import { AccountEntity } from '~/modules/system/account/entities/account.entity';
+import { RoleEntity } from '~/modules/system/role/entities/role.entity';
 import { ApiProperty, OmitType, PickType } from '@nestjs/swagger';
 
 export class AccountVo extends OmitType(AccountEntity, ['roles'] as const) {

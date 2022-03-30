@@ -6,8 +6,8 @@ import { FindRoleDto } from './dto/find-role.dto';
 import { JwtAuthGuard } from '~/common/guard/auth.guard';
 import { ApiCreatedResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PagingListBaseVo, schemaHandle } from '~/common/vo/list.vo';
-import { RoleSimpleListVo } from '~/system/role/vo/listMenu.vo';
-import { RoleEntity } from '~/system/role/entities/role.entity';
+import { RoleSimpleListVo } from '~/modules/system/role/vo/listMenu.vo';
+import { RoleEntity } from '~/modules/system/role/entities/role.entity';
 import { PermissionsGuard } from '~/common/guard/permissions.guard';
 import { Permissions } from '~/common/decorators/permissions.decorator';
 

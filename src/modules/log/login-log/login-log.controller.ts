@@ -6,8 +6,8 @@ import { PagingListBaseVo, schemaHandle } from '~/common/vo/list.vo';
 import { JwtAuthGuard } from '~/common/guard/auth.guard';
 import { PermissionsGuard } from '~/common/guard/permissions.guard';
 import { Permissions } from '~/common/decorators/permissions.decorator';
-import { LoginLogVo } from '~/log/login-log/vo/loging-log.vo';
-import { FindLoginLogDto } from '~/log/login-log/dto/find-login-log.dto';
+import { LoginLogVo } from '~/modules/log/login-log/vo/loging-log.vo';
+import { FindLoginLogDto } from '~/modules/log/login-log/dto/find-login-log.dto';
 
 @ApiTags('日志管理-登录日志')
 @ApiExtraModels(PagingListBaseVo)

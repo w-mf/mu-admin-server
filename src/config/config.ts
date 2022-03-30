@@ -8,4 +8,8 @@ export default () => ({
 
   AES_IV: '0000000000000000', // aes 加密iv，需等于16位
   createAccountPass: '123456',
+  pathPrefix: 'api', // api前缀
+  port: '3000',
+  env: process.env.ENV, // 'dev','prod'
+  enableSwagger: process.env.ENV === 'dev',
 });

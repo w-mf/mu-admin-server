@@ -5,7 +5,7 @@ import { RoleEntity } from './entities/role.entity';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { FindRoleDto } from './dto/find-role.dto';
-import { MenuService } from '~/system/menu/menu.service';
+import { MenuService } from '~/modules/system/menu/menu.service';
 
 @Injectable()
 export class RoleService {

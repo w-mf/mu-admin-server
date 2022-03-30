@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToMany, TreeParent, TreeChildren, Tree } from 'typeorm';
 import { BaseEntity } from '~/common/entity/base.entity';
-import { RoleEntity } from '~/system/role/entities/role.entity';
+import { RoleEntity } from '~/modules/system/role/entities/role.entity';
 import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'menu' })

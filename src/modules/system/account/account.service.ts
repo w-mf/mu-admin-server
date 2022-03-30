@@ -13,9 +13,9 @@ import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { FindAccountDto } from './dto/find-account.dto';
 import { SetPasswordAccountDto } from './dto/setpassword-account.dto';
-import { RoleService } from '~/system/role/role.service';
-import { AuthService } from '~/auth/auth.service';
-import { MenuService } from '~/system/menu/menu.service';
+import { RoleService } from '~/modules/system/role/role.service';
+import { AuthService } from '~/modules/auth/auth.service';
+import { MenuService } from '~/modules/system/menu/menu.service';
 import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class AccountService {

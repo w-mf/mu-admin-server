@@ -1,12 +1,12 @@
 import { Injectable, BadRequestException, UnauthorizedException, Inject, forwardRef } from '@nestjs/common';
-import { AccountService } from '~/system/account/account.service';
+import { AccountService } from '~/modules/system/account/account.service';
 import { JwtService } from '@nestjs/jwt';
 import { EncryptionDto } from './dto/encryption.dto';
 import { aesEncryption, aesDecryption } from '~/common/utils/crypto';
 import { ConfigService } from '@nestjs/config';
-import { LoginLogService } from '~/log/login-log/login-log.service';
+import { LoginLogService } from '~/modules/log/login-log/login-log.service';
 import type { IJwtPayload } from './jwt.strategy';
-import { LoginDto } from '~/auth/dto/login.dto';
+import { LoginDto } from '~/modules/auth/dto/login.dto';
 import { UAParser } from 'ua-parser-js';
 
 @Injectable()

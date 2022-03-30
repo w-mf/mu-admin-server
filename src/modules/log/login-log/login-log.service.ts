@@ -3,7 +3,7 @@ import { CreateLoginLogDto } from './dto/create-login-log.dto';
 import { FindLoginLogDto } from './dto/find-login-log.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
-import { LoginLogEntity } from '~/log/login-log/entities/login-log.entity';
+import { LoginLogEntity } from '~/modules/log/login-log/entities/login-log.entity';
 import * as dayjs from 'dayjs';
 @Injectable()
 export class LoginLogService {
