@@ -43,6 +43,7 @@ export async function bootstrap() {
   const PORT = configService.get('port');
   await app.listen(PORT, () => {
     logger.log(`服务已经启动,接口请访问:http://localhost:${PORT}/${configService.get('pathPrefix')}`);
+    if (configService.get('enableSwagger')) logger.log(`服务已经启动,接口文档请访问:http://localhost:${PORT}/docs`);
   });
 
   /** 未处理的异常 */

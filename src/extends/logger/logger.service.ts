@@ -45,14 +45,6 @@ export class WinstonService implements LoggerService {
         format.colorize({ all: true }),
       ),
     });
-    let httpLogger: any = new transports.Console({
-      level: 'http',
-      format: format.combine(
-        format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        format.printf((message) => this.format(message)),
-        format.colorize({ all: true }),
-      ),
-    });
     if (this.configService.get('env') === 'prod') {
       const dirname = 'logs';
       consoleLogger = new DailyRotateFile({
@@ -89,24 +81,13 @@ export class WinstonService implements LoggerService {
           format.printf((message) => this.format(message)),
         ),
       });
-      httpLogger = new DailyRotateFile({
-        dirname,
-        level: 'http',
-        filename: '%DATE%-http.log',
-        datePattern: `YYYY-MM-DD-HH`,
-        zippedArchive: true,
-        format: format.combine(
-          format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-          format.printf((message) => this.format(message)),
-        ),
-      });
     }
 
     return {
       exitOnError: false,
       handleExceptions: true,
       exceptionHandlers: stderrLogger,
-      transports: [consoleLogger, stdoutLogger, stderrLogger, httpLogger],
+      transports: [consoleLogger, stdoutLogger, stderrLogger],
     };
   }
 
