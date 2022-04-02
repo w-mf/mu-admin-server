@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiCreatedResponse, ApiOkResponse, ApiExtraModels } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
@@ -8,12 +8,11 @@ import { SetPasswordAccountDto } from './dto/setpassword-account.dto';
 import { JwtAuthGuard } from '~/common/guard/auth.guard';
 import { PermissionsGuard } from '~/common/guard/permissions.guard';
 import { ResetPasswordAccountDto } from './dto/reset-password-account.dto';
-import { PagingListBaseVo, schemaHandle } from '~/common/vo/list.vo';
 import { AccountVo } from './vo/account.vo';
+import { AccountListVo } from './vo/accountList.vo';
 import { Permissions } from '~/common/decorators/permissions.decorator';
 
 @ApiTags('系统管理-用户')
-@ApiExtraModels(PagingListBaseVo)
 @Controller('system/account')
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 export class AccountController {
@@ -30,8 +29,8 @@ export class AccountController {
   @Get()
   @Permissions(['sys:account:list'])
   @ApiOperation({ summary: '查看系统用户。分页' })
-  @ApiOkResponse({ description: '分页查询信息', schema: schemaHandle(PagingListBaseVo, AccountVo) })
-  findAll(@Query() findAccountDto: FindAccountDto): Promise<PagingListBaseVo<AccountVo>> {
+  @ApiOkResponse({ description: '分页查询信息', type: AccountListVo })
+  findAll(@Query() findAccountDto: FindAccountDto): Promise<AccountListVo> {
     return this.accountService.findAll(findAccountDto) as any;
   }
 

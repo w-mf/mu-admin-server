@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { TypeOrmModule } from '~/extends/typeOrm/typeorm.module';
+import { ConfigModule } from '~/extends/config/config.module';
 import { SwaggerModule } from '~/extends/swagger/swagger.module';
 import { LoggerModule } from '~/extends/logger/logger.module';
 
@@ -10,19 +10,10 @@ import { LogModule } from '~/modules/log/log.module';
 import { SystemModule } from '~/modules/system/system.module';
 import { AuthModule } from '~/modules/auth/auth.module';
 
-import databaseConfig from '../config/database.config';
-import config from '../config/config';
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: process.env.NODE_ENV === 'prod' ? '.env.production' : '.env.development',
-      load: [config, databaseConfig],
-    }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => config.get('database'),
-      inject: [ConfigService],
-    }),
+    ConfigModule(),
+    TypeOrmModule(),
     LoggerModule,
     SwaggerModule,
     /** 业务模块 */

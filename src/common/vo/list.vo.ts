@@ -1,6 +1,6 @@
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
 
-export class PagingListBaseVo<TData> {
+export class PagingListBaseVo {
   @ApiProperty({ description: '列表总条数' })
   readonly total: number;
 
@@ -9,8 +9,6 @@ export class PagingListBaseVo<TData> {
 
   @ApiProperty({ description: '页码' })
   readonly pageNo: number;
-
-  readonly list: TData[];
 }
 // controller api schema 生成
 export const schemaHandle = (vo1, vo2) => ({
