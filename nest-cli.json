@@ -5,8 +5,7 @@
     "plugins": [{
       "name": "@nestjs/swagger",
       "options": {
-        "introspectComments": true,
-        "dtoFileNameSuffix": [".dto.ts", ".entity.ts", ".vo.ts"]
+        "introspectComments": true
       }
     }]
   }

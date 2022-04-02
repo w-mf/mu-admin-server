@@ -11,5 +11,5 @@ export default () => ({
   pathPrefix: 'api', // api前缀
   port: '3000',
   env: process.env.ENV, // 'dev','prod'
-  enableSwagger: true, //process.env.ENV !== 'prod',
+  enableSwagger: process.env.ENV === 'dev',
 });
