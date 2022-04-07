@@ -3,7 +3,8 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { EncryptionDto } from './dto/encryption.dto';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { LoginVo } from './auth.vo';
+import { LoginVo } from './vo/login.vo';
+import { ImgVerifyCodeVo } from './vo/img-verify-code.vo';
 import { JwtAuthGuard } from '~/common/guard/auth.guard';
 import { Request } from 'express';
 
@@ -11,6 +12,14 @@ import { Request } from 'express';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post('get-img-verify-code')
+  @HttpCode(200)
+  @ApiOperation({ summary: '获取验证码' })
+  @ApiOkResponse({ type: ImgVerifyCodeVo })
+  async getImgVerifyCode() {
+    return this.authService.getImgVerifyCode();
+  }
 
   @Post('login')
   @HttpCode(200)

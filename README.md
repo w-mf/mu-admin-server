@@ -39,7 +39,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 生成镜像
 `docker build -t mu-admin-server .`<br>
 运行镜像
-`docker run -it -p 3000:3000 -v /logs/mu-admin-server:/usr/app/mu-admin-server/logs --name muAdminServer mu-admin-server`
+`docker run -d -p 3000:3000 -v /logs/mu-admin-server:/usr/app/mu-admin-server/logs --name muAdminServer mu-admin-server`
 # 目录说明
 
 # 异常码使用说明

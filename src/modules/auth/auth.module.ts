@@ -6,8 +6,9 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import Config from '~/config/config';
 import { JwtStrategy } from './jwt.strategy';
-import { ConfigModule } from '@nestjs/config';
 import { LoginLogModule } from '~/modules/log/login-log/login-log.module';
+import { CacheModule } from '~/extends/cache/cache.module';
+import { ConfigModule } from '~/extends/config/config.module';
 
 @Global()
 @Module({
@@ -18,7 +19,8 @@ import { LoginLogModule } from '~/modules/log/login-log/login-log.module';
       secret: Config().jwtConstants.secret,
       signOptions: { expiresIn: Config().jwtConstants.expiresIn },
     }),
-    ConfigModule,
+    ConfigModule(),
+    CacheModule(),
     LoginLogModule,
   ],
   controllers: [AuthController],

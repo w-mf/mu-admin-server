@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { TypeOrmModule } from '~/extends/typeOrm/typeorm.module';
 import { ConfigModule } from '~/extends/config/config.module';
+import { CacheModule } from '~/extends/cache/cache.module';
 import { SwaggerModule } from '~/extends/swagger/swagger.module';
 import { LoggerModule } from '~/extends/logger/logger.module';
 
@@ -14,6 +15,7 @@ import { AuthModule } from '~/modules/auth/auth.module';
   imports: [
     ConfigModule(),
     TypeOrmModule(),
+    CacheModule(),
     LoggerModule,
     SwaggerModule,
     /** 业务模块 */
