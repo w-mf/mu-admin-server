@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateLoginLogDto } from './dto/create-login-log.dto';
 import { FindLoginLogDto } from './dto/find-login-log.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import { Repository, Between, ILike } from 'typeorm';
 import { LoginLogEntity } from '~/modules/log/login-log/entities/login-log.entity';
 import * as dayjs from 'dayjs';
 @Injectable()
@@ -21,17 +21,22 @@ export class LoginLogService {
     const {
       pageNo,
       pageSize,
-      startDate = dayjs().set('hour', 0).set('minute', 0).set('second', 0).toDate(),
+      userName,
+      status,
+      startDate = dayjs().subtract(7, 'days').set('hour', 0).set('minute', 0).set('second', 0).toDate(),
       endDate = dayjs().set('hour', 23).set('minute', 59).set('second', 59).toDate(),
     } = findLoginLogDto;
     const dateBetween = Between(startDate, endDate);
+    const where = {
+      createdAt: dateBetween,
+    };
+    if (userName) where['userName'] = ILike('%' + userName + '%');
+    if (status) where['status'] = status;
     const [list, total] = await this.loginLogRepository.findAndCount({
       order: {
-        id: 'ASC',
+        createdAt: 'DESC',
       },
-      where: {
-        createdAt: dateBetween,
-      },
+      where,
       skip: (pageNo - 1) * pageSize,
       take: pageSize,
     });

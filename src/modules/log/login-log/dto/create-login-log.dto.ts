@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateLoginLogDto {
   /** 登录账号 */
   @IsNotEmpty()
+  @IsString()
   readonly userName: string;
 
   /** ip */

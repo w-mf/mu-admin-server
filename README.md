@@ -95,7 +95,7 @@ mu-admin-server
 # docker 运行
 生成镜像
 ```bash
-docker build -t mu-admin-server .
+docker build -t mu-admin-server:latest -t mu-admin-server:<YYYY.MM.DD.xx> .
 ```
 
 运行镜像
