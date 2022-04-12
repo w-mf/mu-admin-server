@@ -16,7 +16,7 @@ import { Cache } from 'cache-manager';
 
 import { AccountService } from '~/modules/system/account/account.service';
 import { LoginLogService } from '~/modules/log/login-log/login-log.service';
-import { aesEncryption, aesDecryption } from '~/common/utils/crypto';
+import { aesEncryption, aesDecryption, mobileEncryption } from '~/common/utils/crypto';
 import type { IJwtPayload } from './jwt.strategy';
 import { EncryptionDto } from './dto/encryption.dto';
 import { LoginDto } from './dto/login.dto';
@@ -64,6 +64,12 @@ export class AuthService {
     };
     return {
       accessToken: this.jwtService.sign(payload),
+      accountInfo: {
+        ...account,
+        mobile: mobileEncryption(account.mobile),
+        roles: undefined,
+        roleList: account.roles.map((i) => ({ id: i.id, name: i.name })),
+      },
     };
   }
   // 刷新token

@@ -58,9 +58,21 @@ export class MenuService {
   }
 
   async update(id: number, updateMenuDto: UpdateMenuDto) {
-    await this.findOne(id);
-    await getTreeRepository(MenuEntity).update(id, updateMenuDto);
-    return await this.findOne(id);
+    const menu = await this.findOne(id);
+    if (updateMenuDto.parentId) {
+      if (updateMenuDto.parentId === id) throw new PreconditionFailedException('父级节点不能为自身');
+      menu.parent = await this.findOne(updateMenuDto.parentId);
+    }
+    Object.keys(updateMenuDto).forEach((key) => {
+      menu[key] = updateMenuDto[key];
+    });
+    menu.id = id;
+    const res = await this.menuRepository.save(menu);
+    return {
+      ...res,
+      parentId: res.parent ? res.parent.id : undefined,
+      parent: undefined,
+    };
   }
 
   async remove(id: number) {

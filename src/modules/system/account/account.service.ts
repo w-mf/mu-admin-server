@@ -17,6 +17,7 @@ import { RoleService } from '~/modules/system/role/role.service';
 import { AuthService } from '~/modules/auth/auth.service';
 import { MenuService } from '~/modules/system/menu/menu.service';
 import { ConfigService } from '@nestjs/config';
+import { mobileEncryption } from '~/common/utils/crypto';
 @Injectable()
 export class AccountService {
   constructor(
@@ -57,8 +58,11 @@ export class AccountService {
       skip: (pageNo - 1) * pageSize,
       take: pageSize,
     });
+    // 手机号加密
+
     const list = accounts.map((item) => ({
       ...item,
+      mobile: mobileEncryption(item.mobile),
       roles: undefined,
       roleList: item.roles.map((i) => ({ id: i.id, name: i.name })),
     }));
@@ -87,6 +91,7 @@ export class AccountService {
     }
     return {
       ...account,
+      mobile: mobileEncryption(account.mobile),
       roles: undefined,
       roleList: account.roles.map((item) => ({ id: item.id, name: item.name })),
     };

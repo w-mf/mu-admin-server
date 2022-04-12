@@ -34,3 +34,20 @@ export async function aesDecryption(data, key, iv) {
   cipherChunks.push(decipher.final(clearEncoding));
   return cipherChunks.join('');
 }
+
+/**
+ * 手机号加密
+ * @param {string} mobile 手机号
+ * @param {number} digit 加密位数，默认4
+ * @returns {string}
+ */
+export function mobileEncryption(mobile: string | undefined, digit = 4) {
+  const mobileArr = `${mobile || ''}`.split('') || [];
+
+  if (mobileArr.length) {
+    const startIndex = Math.floor(Math.floor(mobileArr.length / 2) - digit / 2);
+    const endIndex = Math.floor(Math.floor(mobileArr.length / 2) + digit / 2);
+    mobileArr.forEach((item, index) => (mobileArr[index] = index >= startIndex && index < endIndex ? '*' : item));
+  }
+  return mobileArr.join('');
+}
