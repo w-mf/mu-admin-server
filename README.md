@@ -54,6 +54,7 @@ mu-admin-server
 | | ├─ guard //守卫
 | | ├─ pipe //管道
 | | ├─ middleware //中间件
+| | ├─ schedules // 定时器
 | | ├─ utils //公共工具
 | | └─ vo //公共视图模型
 | ├─config //应用配置目录
