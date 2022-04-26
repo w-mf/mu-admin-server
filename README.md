@@ -21,7 +21,8 @@
 11. [ ] 用户消息
 
 ## 开始
-
+### 配置环境变量
+新增文件.env.development和.env.production。配置内容见[环境变量说明](#环境变量说明)
 ```bash
 $ npm install
 # development
@@ -102,6 +103,18 @@ docker build -t mu-admin-server:latest -t mu-admin-server:<YYYY.MM.DD.xx> .
 运行镜像
 ```bash
 docker run -d -p 3000:3000 -v /logs/mu-admin-server:/usr/app/mu-admin-server/logs --name muAdminServer mu-admin-server
+```
+
+## 环境变量说明
+```bash
+# 数据库名称
+DATABASE_NAME=xxxx
+# 数据库账号
+DATABASE_USER=admin
+# 数据库密码
+DATABASE_PASS=Mupass123.
+# 环境 'dev' | 'prod'
+ENV=dev
 ```
 
 ## 异常码使用说明

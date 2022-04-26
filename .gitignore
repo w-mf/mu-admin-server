@@ -1,8 +1,8 @@
-.idea/
-.vscode/
 node_modules/
 build/
 tmp/
 temp/
 logs
 dist
+.env.development
+.env.production
