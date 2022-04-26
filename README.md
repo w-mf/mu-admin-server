@@ -19,6 +19,7 @@
 9. [ ] 日志管理-操作日志
 10. [x] 服务器信息 
 11. [ ] 用户消息
+12. [x] 爬虫demo
 
 ## 开始
 ### 配置环境变量
@@ -107,12 +108,16 @@ docker run -d -p 3000:3000 -v /logs/mu-admin-server:/usr/app/mu-admin-server/log
 
 ## 环境变量说明
 ```bash
+# 数据库地址
+DATABASE_HOST=xxxx
+# 数据库端口
+DATABASE_PORT=xxxx
 # 数据库名称
 DATABASE_NAME=xxxx
 # 数据库账号
-DATABASE_USER=admin
+DATABASE_USER=xxxx
 # 数据库密码
-DATABASE_PASS=Mupass123.
+DATABASE_PASS=xxxx
 # 环境 'dev' | 'prod'
 ENV=dev
 ```

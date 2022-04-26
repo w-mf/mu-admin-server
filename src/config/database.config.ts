@@ -2,8 +2,8 @@ import { registerAs } from '@nestjs/config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 export default registerAs('database', () => ({
   type: 'mysql',
-  host: '120.76.45.44',
-  port: '3333',
+  host: process.env.DATABASE_HOST,
+  port: process.env.DATABASE_PORT,
   database: process.env.DATABASE_NAME,
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASS,
