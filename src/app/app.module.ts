@@ -12,7 +12,7 @@ import { LogModule } from '~/modules/log/log.module';
 import { SystemModule } from '~/modules/system/system.module';
 import { AuthModule } from '~/modules/auth/auth.module';
 
-import { BtdwanAttendanceService } from '~/common/schedules/btdwanAttendance.schedule';
+import { PuppeteerDemoService } from '~/common/schedules/puppeteerDemo.schedule';
 
 @Module({
   imports: [
@@ -28,6 +28,6 @@ import { BtdwanAttendanceService } from '~/common/schedules/btdwanAttendance.sch
     OtherModule,
     LogModule,
   ],
-  providers: [BtdwanAttendanceService],
+  providers: [PuppeteerDemoService],
 })
 export class AppModule {}
