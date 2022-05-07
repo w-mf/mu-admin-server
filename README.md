@@ -4,7 +4,8 @@
 
 一个基于 nestjs + mysql 的后台管理系统的 RESTful API 服务。<br>
 配套前端项目 [mu-admin-web](https://github.com/w-mf/mu-admin-web)
-
+## 演示地址
+http://120.76.45.44/
 ## 功能
 1. [x] 密码登录（含图形验证码）
 2. [x] jwt鉴权
