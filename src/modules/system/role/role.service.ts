@@ -6,6 +6,7 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { FindRoleDto } from './dto/find-role.dto';
 import { MenuService } from '~/modules/system/menu/menu.service';
+import { whereHandle } from '~/common/utils/findHandle';
 
 @Injectable()
 export class RoleService {
@@ -43,11 +44,14 @@ export class RoleService {
     return res.map((item) => ({ label: item.name, value: item.id }));
   }
   async findPage(findRoleDto: FindRoleDto) {
-    const { pageNo, pageSize } = findRoleDto;
+    const { pageNo, pageSize, status, name } = findRoleDto;
+    const where = whereHandle({ status, name }, ['status']);
+
     const [roles, total] = await this.roleRepository.findAndCount({
       order: {
         id: 'ASC',
       },
+      where,
       skip: (pageNo - 1) * pageSize,
       take: pageSize,
     });

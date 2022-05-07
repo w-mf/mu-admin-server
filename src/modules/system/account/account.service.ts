@@ -18,6 +18,7 @@ import { AuthService } from '~/modules/auth/auth.service';
 import { MenuService } from '~/modules/system/menu/menu.service';
 import { ConfigService } from '@nestjs/config';
 import { mobileEncryption } from '~/common/utils/crypto';
+import { whereHandle } from '~/common/utils/findHandle';
 @Injectable()
 export class AccountService {
   constructor(
@@ -49,12 +50,15 @@ export class AccountService {
   }
 
   async findAll(findAccountDto: FindAccountDto) {
-    const { pageNo, pageSize } = findAccountDto;
+    const { pageNo, pageSize, userName, name, mobile, status } = findAccountDto;
+    const where = whereHandle({ userName, name, mobile, status }, ['status']);
+
     const [accounts, total] = await this.accountRepository.findAndCount({
       relations: ['roles'],
       order: {
         id: 'ASC',
       },
+      where,
       skip: (pageNo - 1) * pageSize,
       take: pageSize,
     });

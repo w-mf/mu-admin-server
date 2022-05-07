@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { CreateLoginLogDto } from './dto/create-login-log.dto';
 import { FindLoginLogDto } from './dto/find-login-log.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, ILike } from 'typeorm';
+import { Repository, Between } from 'typeorm';
 import { LoginLogEntity } from '~/modules/log/login-log/entities/login-log.entity';
 import * as dayjs from 'dayjs';
-import { findDateFill } from '~/common/utils/dateHandle';
+import { findDateFill, whereHandle } from '~/common/utils/findHandle';
 @Injectable()
 export class LoginLogService {
   constructor(
@@ -28,11 +28,8 @@ export class LoginLogService {
       endDate = dayjs().set('hour', 23).set('minute', 59).set('second', 59).toDate(),
     } = findLoginLogDto;
     const dateBetween = Between(findDateFill(startDate, true), findDateFill(endDate, false));
-    const where = {
-      createdAt: dateBetween,
-    };
-    if (userName) where['userName'] = ILike('%' + userName + '%');
-    if (status) where['status'] = status;
+    const where = whereHandle({ createdAt: dateBetween, userName, status }, ['createdAt', 'status']);
+
     const [list, total] = await this.loginLogRepository.findAndCount({
       order: {
         createdAt: 'DESC',
