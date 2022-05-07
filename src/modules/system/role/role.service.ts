@@ -46,7 +46,6 @@ export class RoleService {
   async findPage(findRoleDto: FindRoleDto) {
     const { pageNo, pageSize, status, name } = findRoleDto;
     const where = whereHandle({ status, name }, ['status']);
-
     const [roles, total] = await this.roleRepository.findAndCount({
       order: {
         id: 'ASC',

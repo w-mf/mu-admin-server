@@ -7,7 +7,7 @@ import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerService } from '~/extends/swagger/swagger.service';
 import { WinstonService as LoggerService } from '~/extends/logger/logger.service';
-
+import { requestParamHandle } from '~/common/middleware/requestParamHandle.middleware';
 export async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
@@ -24,6 +24,7 @@ export async function bootstrap() {
   if (configService.get('enableSwagger')) swaggerService.init(app);
 
   /** 全局中间件 */
+  app.use(requestParamHandle);
   //防止跨站脚本攻击
   app.use(helmet());
   app.use(cookieParser());

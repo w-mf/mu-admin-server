@@ -1,6 +1,6 @@
 import { PagingQueryDto } from '~/common/dto/paging-query.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, MaxLength, IsMobilePhone, IsIn } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, MaxLength, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class FindAccountDto extends PagingQueryDto {
@@ -19,7 +19,7 @@ export class FindAccountDto extends PagingQueryDto {
 
   /** 手机号 */
   @IsOptional()
-  @IsMobilePhone('zh-CN')
+  @IsString()
   @MaxLength(48)
   readonly mobile?: string;
 

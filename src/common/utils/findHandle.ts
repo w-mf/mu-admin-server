@@ -23,7 +23,7 @@ export function findDateFill(date: Date | undefined, isStart = true) {
 export function whereHandle(original: object = {}, accurateField: string[] = []) {
   const where = original;
   Object.keys(where).forEach((key) => {
-    if (typeof where[key] === 'undefined' || where[key] === null) delete where[key];
+    if (typeof where[key] === 'undefined') delete where[key];
     else if (!accurateField.includes(key)) {
       // 处理状态其他字段模糊查询
       where[key] = ILike('%' + where[key] + '%');
