@@ -9,7 +9,7 @@ export class FindAccountDto extends PagingQueryDto {
   @IsString()
   @IsOptional()
   @MaxLength(32)
-  readonly userName: string;
+  readonly userName?: string;
 
   /** 姓名 */
   @IsOptional()
@@ -28,5 +28,5 @@ export class FindAccountDto extends PagingQueryDto {
   @IsOptional()
   @IsIn([1, 0])
   @Type(() => Number)
-  readonly status: 1 | 0;
+  readonly status?: 1 | 0;
 }

@@ -1,4 +1,5 @@
 import { IsString, MaxLength, IsIn, IsNotEmpty, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRoleDto {
   /** 角色名称 */
@@ -14,6 +15,7 @@ export class CreateRoleDto {
   readonly remark?: string;
 
   /** 状态。1:正常，0: 停用 */
+  @ApiProperty({ enum: [1, 0], default: 1 })
   @IsOptional()
   @IsIn([1, 0])
   readonly status: 1 | 0;
