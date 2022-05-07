@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, ILike } from 'typeorm';
 import { LoginLogEntity } from '~/modules/log/login-log/entities/login-log.entity';
 import * as dayjs from 'dayjs';
+import { findDateFill } from '~/common/utils/dateHandle';
 @Injectable()
 export class LoginLogService {
   constructor(
@@ -26,7 +27,7 @@ export class LoginLogService {
       startDate = dayjs().subtract(7, 'days').set('hour', 0).set('minute', 0).set('second', 0).toDate(),
       endDate = dayjs().set('hour', 23).set('minute', 59).set('second', 59).toDate(),
     } = findLoginLogDto;
-    const dateBetween = Between(startDate, endDate);
+    const dateBetween = Between(findDateFill(startDate, true), findDateFill(endDate, false));
     const where = {
       createdAt: dateBetween,
     };
